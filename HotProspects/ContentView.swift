@@ -10,6 +10,7 @@ import SwiftUI
 import SamplePackage
 
 struct ContentView: View {
+    var prospects = Prospects()
     
     var body: some View {
         TabView {
@@ -33,7 +34,7 @@ struct ContentView: View {
                     Image(systemName: "person.crop.square")
                     Text("Me")
             }
-        }
+        }.environmentObject(prospects)
     }
 }
 
