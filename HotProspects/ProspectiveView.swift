@@ -14,6 +14,7 @@ enum FilterType {
 
 struct ProspectiveView: View {
     let filter: FilterType
+    
     var title: String {
         switch filter {
         case .none:
@@ -24,11 +25,32 @@ struct ProspectiveView: View {
             return "Uncontacted people"
         }
     }
+    
     @EnvironmentObject var prospects: Prospects
+    
+    var filteredProspects: [Prospect] {
+        switch filter {
+        case .none:
+            return prospects.people
+        case .contacted:
+            return prospects.people.filter { $0.isContacted }
+        case .uncontacted:
+            return prospects.people.filter { !$0.isContacted }
+        }
+    }
     
     var body: some View {
         NavigationView {
-            Text("People: \(prospects.people.count)")
+            List {
+                ForEach(filteredProspects) { prospect in
+                    VStack(alignment: .leading) {
+                        Text(prospect.name)
+                            .font(.headline)
+                        Text(prospect.emailAddress)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
                 .navigationBarTitle(title)
                 .navigationBarItems(trailing: Button(action: {
                     let prospect = Prospect()
